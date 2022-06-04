@@ -1,0 +1,9 @@
+name: base
+variant: scratch
+shell: /toolchain/bin/bash
+dependencies:
+  - image: "{{ .SIDERO_PKGS_PREFIX }}/base:{{ .SIDERO_PKGS_VERSION }}"
+  - image: "{{ .SIDERO_PKGS_PREFIX }}/ca-certificates:{{ .SIDERO_PKGS_VERSION }}"
+finalize:
+  - from: /
+    to: /

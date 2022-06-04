@@ -1,0 +1,7 @@
+name: talos-vmtoolsd
+container:
+  entrypoint: ./talos-vmtoolsd
+depends:
+  - network:
+    - addresses
+restart: always

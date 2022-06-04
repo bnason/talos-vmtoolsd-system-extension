@@ -1,0 +1,12 @@
+# syntax = ghcr.io/siderolabs/bldr:v0.2.0-alpha.8-frontend
+
+format: v1alpha2
+
+vars:
+  VERSION: "{{ .BUILD_ARG_TAG }}"
+  SIDERO_PKGS_PREFIX: ghcr.io/siderolabs
+  SIDERO_PKGS_VERSION: v1.1.0
+  TALOS_VMTOOLSD_VERSION: 0.3
+
+labels:
+  org.opencontainers.image.source: https://github.com/bnason/talos-vmtoolsd-system-extension

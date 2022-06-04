@@ -1,0 +1,33 @@
+name: talos-vmtoolsd-system-extension
+variant: scratch
+shell: /toolchain/bin/bash
+dependencies:
+  - stage: base
+steps:
+  - sources:
+      - url: https://github.com/mologie/talos-vmtoolsd/tarball/release-{{ .TALOS_VMTOOLSD_VERSION }}
+        destination: talos-vmtools.tar.gz
+        sha256: a9a52784c917268afc17097abee904334982f2155910ee2305aa8f268725e189
+        sha512: 534175cc67b5542d67785f313ac6d3e0ac7c73cc2f3510dec19808db3bce2bd4d990e461443074b0de3bd8a44a05c7ec2ac6d8c31188d72a97ba18f16db2d1f5
+    prepare:
+      - sed -i 's#$VERSION#{{ .VERSION }}#' /pkg/manifest.yaml
+      - mkdir src
+      - tar -xzf talos-vmtools.tar.gz --directory src --strip-components=1
+    build:
+      - |
+        export PATH=${PATH}:${TOOLCHAIN}/go/bin
+        cd src
+        CGO_ENABLED=0 go build -ldflags="-s -w" -trimpath -o talos-vmtoolsd ./cmd/talos-vmtoolsd
+    install:
+      - |
+        mkdir -p /rootfs/usr/local/etc/containers
+        mkdir -p /rootfs/usr/local/lib/containers/talos-vmtoolsd
+
+        cp -p src/talos-vmtoolsd /rootfs/usr/local/lib/containers/talos-vmtoolsd/
+finalize:
+  - from: /rootfs
+    to: /rootfs
+  - from: /pkg/manifest.yaml
+    to: /
+  - from: /pkg/talos-vmtoolsd.yaml
+    to: /rootfs/usr/local/etc/containers/
